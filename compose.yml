@@ -1,0 +1,33 @@
+services:
+  main:
+    # image: nvidia/cuda:12.3.1-base-ubuntu20.04
+    # command: nvidia-smi
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM python:3.10-slim
+        ADD ./cfg /cfg
+        WORKDIR /cfg
+        RUN pip install --upgrade pip
+        RUN pip install -r requirements.txt
+    container_name: main
+    command: python main.py
+#     deploy:
+#       resources:
+#         reservations:
+#           devices:
+#             - driver: nvidia
+#               count: 1
+#               capabilities: [gpu]
+    environment:
+      - DISPLAY=${DISPLAY}
+    network_mode: host
+    volumes:
+      - ./cfg:/cfg
+      - ./data:/data
+      - ./logs:/logs
+      - ./models:/models
+      - ./results:/results
+      - ./src:/src
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    working_dir: /src

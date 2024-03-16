@@ -48,7 +48,7 @@ endpoints = {
 
 def fetch_data(endpoint):
     nb_requests = NB_MAX_DAILY_API_REQUESTS
-    data_type = endpoints[endpoint]
+    data_type = endpoint
     filename = f'{DATA_FILENAME_PREFIX}{data_type["filename"]}{DATA_FILENAME_SUFFIX}'
     query_string = data_type['query_string']
     url = f'{BASE_URL}{data_type["url"]}'
@@ -72,14 +72,47 @@ def fetch_data(endpoint):
     else:
         print(f'[INFO] -- {datetime.now()} -- no data has been fetched, an existing version can be found at {filename}')
 
-def fetch_fixtures():
-    return fetch_data('fixtures')
+    data_file = open(filename, 'r')
+    data = json.load(data_file)
+    data_file.close()
+    return data
 
-def fetch_teams():
-    return fetch_data('teams')
+def fetch_fixtures(league_id, season):
+    endpoint = {
+            'fixtures': {
+            'filename': f'fixtures_for_league_{league_id}_and_season_{season}',
+            'query_string': { 'league': league_id, 'season': season },
+            'url': 'fixtures'
+            }
+            }
+    return fetch_data(endpoint)
+
+def fetch_teams(team_id):
+    endpoint = {
+      'teams': {
+          'filename': f'team_{team_id}',
+          'query_string': { 'id': team_id },
+          'url': 'teams'
+        },
+    }
+    return fetch_data(endpoint)
 
 def fetch_timezone():
-    return fetch_data('timezone')
+    endpoint = {
+        'timezone': {
+            'filename': 'timezones',
+            'query_string': {},
+            'url': 'timezone'
+        }
+    }
+    return fetch_data(endpoint)
 
-def fetch_statistics():
-    return fetch_data('statistics')
+def fetch_statistics(team_id, league_id, season):
+    endpoint = {
+        'statistics': {
+        'filename': f'team_{team_id}_statistics_for_league_{league_id}_and_season_{season}',
+        'query_string': { 'league': league_id, 'season': season, 'team': team_id },
+        'url': 'teams/statistics'
+        }
+    }
+    return fetch_data(endpoint)

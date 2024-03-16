@@ -24,29 +24,6 @@ DATA_FILENAME_SUFFIX = os.getenv('DATA_FILENAME_SUFFIX')
 # Logs settings
 LOGS_NB_DAILY_REQUESTS_FILENAME = os.getenv('LOGS_FILENAME', '/logs/nb_daily_requests.log')
 
-endpoints = {
-        'timezone': {
-            'filename': 'timezones',
-            'query_string': {},
-            'url': 'timezone'
-            },
-        'teams': {
-            'filename': f'team_{TEAM_ID}',
-            'query_string': { 'id': TEAM_ID },
-            'url': 'teams'
-            },
-        'statistics': {
-            'filename': f'team_{TEAM_ID}_statistics_for_league_{LEAGUE_ID}_and_season_{SEASON}',
-            'query_string': { 'league': LEAGUE_ID, 'season': SEASON, 'team': TEAM_ID },
-            'url': 'teams/statistics'
-            },
-        'fixtures': {
-            'filename': f'fixtures_for_league_{LEAGUE_ID}_and_season_{SEASON}',
-            'query_string': { 'league': LEAGUE_ID, 'season': SEASON },
-            'url': 'fixtures'
-            }
-        }
-
 def fetch_data(endpoint):
     nb_requests = NB_MAX_DAILY_API_REQUESTS
     data_type = endpoint
